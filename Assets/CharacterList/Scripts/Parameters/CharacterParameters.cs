@@ -7,7 +7,7 @@ public class CharacterParameters : CharacterPart{
    public List<CharacterParameter> parameters;
 
    public string nameParameter;
-   public TypeParam typeParam;
+   public TypeElementGroup typeParam;
 
 
    

@@ -4,55 +4,38 @@ using UnityEngine;
 
 public class Group : MonoBehaviour
 {
-	[SerializeField] GroupUI groupPrefab;
-	[SerializeField] GroupUI groupUI;
-	[SerializeField] string _nameGroup;
-
-	[SerializeField] private List<CharacterParameter> parameters;
+	[SerializeField] protected GroupUI groupPrefab;
+	[SerializeField] protected GroupUI groupUI;
+	[SerializeField] protected string _nameGroup;
 	
 	public GroupsKeeper groupKeeper;
 	
 	public string groupName => _nameGroup;
+	
+	[SerializeField] protected List<GroupElement> parameters;
+
 
 	public void SetName(string name)
 	{
 		_nameGroup = name;
 	}
 
-	public void AddParameter(string nameParameter, TypeParam typeParam)
+	public virtual void AddElement(string nameItem, TypeElementGroup typeItem)
 	{
-		CreateParameter(nameParameter, AllDictionary.instance.parametersDictionary.First(parameter => parameter.type == typeParam).prefab);
 	}
 
-	private void CreateParameter(string nameParameter, CharacterParameter prefab)
+	protected virtual void CreateElement(string nameParameter, CharacterParameter prefab)
 	{
-		if(parameters.Where(p => p.nameParameter == nameParameter).Count() > 0) return;
 		
-		CharacterParameter newParameter = Instantiate(prefab.gameObject, transform.position, Quaternion.identity).GetComponent<CharacterParameter>();
-		newParameter.SetName(nameParameter);
-		newParameter.group = this;
-		
-		newParameter.transform.SetParent(transform);
-		
-		parameters.Add(newParameter);
-		
-		CreateParametersUI();
 	}
 	
-	public void CreateParametersUI()
+	public virtual void CreateElementUI()
 	{
-		if(groupUI != null && groupUI.gameObject.activeInHierarchy == false) return;
 		
-		foreach(CharacterParameter parameter in parameters)
-		{
-			if(parameter.ObjectUI == null)
-				parameter.ObjectUI = groupUI.Create(parameter);
-		}
 	}
 	
-	public void RemoveParameter(CharacterParameter parameter)
+	public virtual void RemoveElement<T>(T parameter)
 	{
-		parameters.Remove(parameter);
 	}
 	
 	public void DeleteGroup()
@@ -62,9 +45,11 @@ public class Group : MonoBehaviour
 		Destroy(gameObject);
 	}
 	
-	public List<CharacterParameter> GetParameters() => parameters;
 	public GroupUI prefab => groupPrefab;
 	public GroupUI objectUI => groupUI;
+	
+	public List<GroupElement> GetParameters() => parameters;
+	
 	
 	public void SetUI(GroupUI objectUI)
 	{

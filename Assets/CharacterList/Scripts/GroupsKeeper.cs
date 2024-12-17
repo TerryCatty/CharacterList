@@ -49,7 +49,7 @@ public class GroupsKeeper : MonoBehaviour
 			{
 				GroupUI newUI = Instantiate(group.prefab.gameObject, groupsScroll.transform).GetComponent<GroupUI>();
 				group.SetUI(newUI);
-				group.CreateParametersUI();
+				group.CreateElementUI();
 			}
 		}
 	}

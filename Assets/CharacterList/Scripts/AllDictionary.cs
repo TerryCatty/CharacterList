@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class AllDictionary : MonoBehaviour
 {
-	public List<ParameterType> parametersDictionary;
+	public List<ElementType> elementsDictionary;
 	public static AllDictionary instance;
 	
 	public void Awake()
 	{
 		if(instance != null) Destroy(gameObject);
 		instance = this;
-		
-		Debug.Log(instance.parametersDictionary.Count);
 	}
 }
 
 [Serializable]
-public struct ParameterType
+public struct ElementType
 {
-	public TypeParam type;
-	public CharacterParameter prefab;
+	public TypeElementGroup type;
+	public GroupElement prefab;
 }
+
+

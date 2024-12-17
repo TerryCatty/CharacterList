@@ -20,7 +20,7 @@ public class GroupUI : MonoBehaviour
 	public Group group;
 	
 	private TMP_Dropdown dropdown;
-	private TypeParam typeParam;
+	private TypeElementGroup typeParam;
 	
 	
 	public void SetNameGroup(string value)
@@ -79,12 +79,12 @@ public class GroupUI : MonoBehaviour
 	public void CreateParameter(string nameParameter)
 	{
 		ChangeType();
-		group.AddParameter(nameParameter, typeParam);
+		group.AddElement(nameParameter, typeParam);
 	}
 	
 	public void ChangeType()
 	{
-		typeParam = AllDictionary.instance.parametersDictionary.First(par => par.type.ToString() == dropdown.options[dropdown.value].text.ToLower()).type;
+		typeParam = AllDictionary.instance.elementsDictionary.First(par => par.type.ToString() == dropdown.options[dropdown.value].text.ToLower()).type;
 	}
 	public ParameterUI Create(CharacterParameter elementUI)
 	{

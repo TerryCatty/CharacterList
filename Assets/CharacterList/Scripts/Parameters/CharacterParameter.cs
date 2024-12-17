@@ -1,22 +1,16 @@
 using System;
 using UnityEngine;
 
-public class CharacterParameter : MonoBehaviour
+public class CharacterParameter : GroupElement
 {
-	[SerializeField] protected string _nameParameter;
 	[SerializeField] protected string nameTypeParameter;
 	
-	public string nameParameter => _nameParameter;
+	public string nameParameter => nameElement;
 	public ParameterUI prefabUI;
 	
 	public ParameterUI ObjectUI;
 	public Group group;
 
-	public void SetName(string name)
-	{
-		_nameParameter = name;
-	}
-	
 	public virtual void SetValue(string value)
 	{
 		
@@ -24,7 +18,7 @@ public class CharacterParameter : MonoBehaviour
 	
 	public void DeleteParameter()
 	{
-		group.RemoveParameter(this);
+		group.RemoveElement(this);
 		Destroy(ObjectUI.gameObject);
 		Destroy(gameObject);
 	}
@@ -39,9 +33,11 @@ public class BoolParameter : CharacterParameter
 
 
 [Serializable]
-public enum TypeParam
+public enum TypeElementGroup
 {
 	text,
 	number,
-	boolean
+	boolean,
+	defaultItem,
+	actionItem
 }
