@@ -5,6 +5,7 @@ using UnityEngine;
 public class AllDictionary : MonoBehaviour
 {
 	public List<ElementType> elementsDictionary;
+	public List<GroupType> groupsDictionary;
 	public static AllDictionary instance;
 	
 	public void Awake()
@@ -21,4 +22,11 @@ public struct ElementType
 	public GroupElement prefab;
 }
 
+
+[Serializable]
+public struct GroupType
+{
+	public string type;
+	public Group prefab;
+}
 

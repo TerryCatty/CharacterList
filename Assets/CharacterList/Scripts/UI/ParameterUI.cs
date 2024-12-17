@@ -1,21 +1,21 @@
 using TMPro;
 using UnityEngine;
 
-public class ParameterUI : MonoBehaviour
+public class ParameterUI : ElementUI
 {
-	protected string nameParameter;
-	
 	[SerializeField] protected TMP_InputField nameText;
 	[SerializeField] protected TMP_InputField valueText;
+	
+	
+   	public string nameParameter => nameElement;
 	
 	public float width;
 	public float height;
 	
 	public CharacterParameter parameter;
 	
-	public void SetName(string name)
+	public override void SetName(string name)
 	{
-		nameParameter = name;
 		nameText.text = name;
 		nameText.onValueChanged.AddListener(delegate {ChangeNameParameter(nameText.text);});
 		valueText.onValueChanged.AddListener(delegate {ChangeValueParameter(valueText.text);});
@@ -38,6 +38,6 @@ public class ParameterUI : MonoBehaviour
 	
 	public void DeleteParameter()
 	{
-		parameter.DeleteParameter();
+		parameter.DeleteElement();
 	}
 }

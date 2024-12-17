@@ -12,7 +12,7 @@ public class GroupParameters : Group
 	
 	protected void CreateElement(string nameParameter, GroupElement prefab)
 	{
-		if(parameters.Where(p => p.nameElement == nameParameter).Count() > 0) return;
+		if(elements.Where(p => p.nameElement == nameParameter).Count() > 0) return;
 		
 		CharacterParameter newParameter = Instantiate(prefab.gameObject, transform.position, Quaternion.identity).GetComponent<CharacterParameter>();
 		newParameter.SetName(nameParameter);
@@ -20,7 +20,7 @@ public class GroupParameters : Group
 		
 		newParameter.transform.SetParent(transform);
 		
-		parameters.Add(newParameter);
+		elements.Add(newParameter);
 		
 		CreateElementUI();
 	}
@@ -29,7 +29,7 @@ public class GroupParameters : Group
 	{
 		if(groupUI != null && groupUI.gameObject.activeInHierarchy == false) return;
 		
-		foreach(CharacterParameter parameter in parameters)
+		foreach(CharacterParameter parameter in elements)
 		{
 			if(parameter.ObjectUI == null)
 				parameter.ObjectUI = groupUI.Create(parameter);

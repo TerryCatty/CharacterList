@@ -12,7 +12,14 @@ public class Group : MonoBehaviour
 	
 	public string groupName => _nameGroup;
 	
-	[SerializeField] protected List<GroupElement> parameters;
+	[SerializeField] protected List<GroupElement> elements;
+	
+	protected GameObject creationPanel;
+	
+	public virtual void SetCreationPanel(GameObject panel)
+	{
+		creationPanel = panel;
+	}
 
 
 	public void SetName(string name)
@@ -22,6 +29,7 @@ public class Group : MonoBehaviour
 
 	public virtual void AddElement(string nameItem, TypeElementGroup typeItem)
 	{
+		
 	}
 
 	protected virtual void CreateElement(string nameParameter, CharacterParameter prefab)
@@ -34,8 +42,9 @@ public class Group : MonoBehaviour
 		
 	}
 	
-	public virtual void RemoveElement<T>(T parameter)
+	public virtual void RemoveElement(GroupElement element)
 	{
+		elements.Remove(element);
 	}
 	
 	public void DeleteGroup()
@@ -48,7 +57,7 @@ public class Group : MonoBehaviour
 	public GroupUI prefab => groupPrefab;
 	public GroupUI objectUI => groupUI;
 	
-	public List<GroupElement> GetParameters() => parameters;
+	public List<GroupElement> GetElements() => elements;
 	
 	
 	public void SetUI(GroupUI objectUI)

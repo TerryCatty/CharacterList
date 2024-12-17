@@ -44,8 +44,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb08ab226d7e7ffa0b937069523dc3b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parametersDictionary:
+  elementsDictionary:
   - type: 0
-    prefabUI: {fileID: 1020679555958374014, guid: 54543d4978a85c7058c9b0d8ba4a2b05, type: 3}
+    prefab: {fileID: 5412317924206234738, guid: 9deea2c42ba0116d6b91c32835e83546, type: 3}
   - type: 1
-    prefabUI: {fileID: 332788697820550228, guid: a3caf091565b5efaea3a9da83d263176, type: 3}
+    prefab: {fileID: 6443845118960517294, guid: 2a22d067e3038218eb5c07ce7a0bb952, type: 3}
+  - type: 2
+    prefab: {fileID: 0}
+  - type: 3
+    prefab: {fileID: 8597294248110126288, guid: dd69a0fbe77736fa3b4e070a41ad521e, type: 3}
+  - type: 4
+    prefab: {fileID: 2454108068232192939, guid: bac838854149327fe89789a97c907906, type: 3}
+  groupsDictionary:
+  - type: Parameters
+    prefab: {fileID: 6677098000853629656, guid: 6f555d8455e720f68b40bf1a609f3c95, type: 3}
+  - type: Inventory
+    prefab: {fileID: 6677098000853629656, guid: 6fcfbe96d898f58eeb869509b1c5a743, type: 3}

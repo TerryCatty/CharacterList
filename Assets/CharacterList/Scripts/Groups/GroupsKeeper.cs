@@ -11,23 +11,37 @@ public class GroupsKeeper : MonoBehaviour
 	[SerializeField] private GameObject player;
 	[SerializeField] private List<Group> characterGroups;
 	
+	[SerializeField] private string strForCreated = "Created";
+	
 	[SerializeField] private GameObject prefabGroupCreate;
 	private GameObject GroupCreateUI;
 	
+	private TMP_Dropdown dropdown;
+	private GameObject createdParameters;
+	private List<Transform> listCreateParameters;
+		
 	public void CreateGroup(string groupName)
 	{
 		if(characterGroups.Where(g => g.groupName == groupName).Count() > 0) return;
 		
 		
+		ChangeType();
+		
 		Group newGroup = Instantiate(group.gameObject, transform.position, Quaternion.identity).GetComponent<Group>();
 		
 		newGroup.SetName(groupName);
+		newGroup.SetCreationPanel(GroupCreateUI);
 		newGroup.groupKeeper = this;
 		
 		AddGroup(newGroup);
 		newGroup.transform.SetParent(player.transform);
 		
 		RefreshGroups();
+	}
+	
+	private void ChangeType()
+	{
+		group = AllDictionary.instance.groupsDictionary.First(group => group.type.ToLower() == dropdown.options[dropdown.value].text.ToLower()).prefab;
 	}
 	
 	
@@ -58,9 +72,48 @@ public class GroupsKeeper : MonoBehaviour
 	{
 		GroupCreateUI = ManagerUI.instance.OpenWindow(prefabGroupCreate);
 		
+		InitParameter();	
+	}
+	public void InitParameter()
+	{
+		
+		dropdown = GroupCreateUI.GetComponentsInChildren<TMP_Dropdown>().ToList().First(but => but.gameObject.name == "ChooseType");
+		dropdown.onValueChanged.AddListener(delegate{ChangeTypeDropdown();});
+		
+		listCreateParameters = GroupCreateUI.GetComponentsInChildren<Transform>().ToList().Where(obj => obj.gameObject.name.Contains(strForCreated)).ToList();
+		
+		ChangeTypeDropdown();
+		
 		SetCloseButton();
+		
 		SetCreateButton();
 	}
+	
+	
+	public void ChangeTypeDropdown()
+	{
+		try
+		{
+			createdParameters = listCreateParameters.
+			First(but => but.gameObject.name.ToLower() == (dropdown.options[dropdown.value].text  + strForCreated).ToLower()).gameObject;
+			
+			foreach(Transform obj in listCreateParameters)
+			{
+				if(obj.gameObject != createdParameters)
+					obj.gameObject.SetActive(false);
+				else
+					createdParameters.SetActive(true);
+			}
+		
+			
+		}
+		catch
+		{
+			Debug.LogError("No one gameobject with name " + dropdown.options[dropdown.value].text);
+		}
+		
+	}
+	
 	
 	
 	public void SetCloseButton()

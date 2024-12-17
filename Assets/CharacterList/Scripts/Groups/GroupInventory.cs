@@ -1,13 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class GroupInventory : Group
 {
-	private List<Item> items;
+	[SerializeField] private int capacityInventory;
 	
-	  
+	[SerializeField] private string nameInputCapacity;
+	
 	public override void AddElement(string nameItem, TypeElementGroup typeItem)
 	{
 		Item item = AllDictionary.instance.elementsDictionary.First(item => item.type == typeItem).prefab.ConvertTo<Item>();
@@ -23,11 +26,17 @@ public class GroupInventory : Group
 	{
 		
 	}
-	
-	public void RemoveElement(Item item)
+
+	public override void SetCreationPanel(GameObject panel)
 	{
-		items.Remove(item);
+		base.SetCreationPanel(panel);
+		
+		SetCapacity();
 	}
 	
-	public List<Item> GetElements() => items;
+	public void SetCapacity()
+	{
+		TMP_InputField inputCapacity = creationPanel.GetComponentsInChildren<TMP_InputField>().ToList().First(but => but.gameObject.name == nameInputCapacity);
+		capacityInventory = Int32.Parse(inputCapacity.text);
+	}
 }
