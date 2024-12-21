@@ -9,6 +9,22 @@ public class Item : GroupElement
 	
 	public List<ChangingParameter> parameters;
 	
+	public int idCount;
+	
+	public void AddChangingParameter(ChangingParameter param)
+	{
+		parameters.Add(param);
+	}
+	
+	public void RemoveChangingParameter(int id)
+	{
+		parameters.Remove(parameters.First(p => p.id == id));
+	}
+	
+	public void ChangeParameter(int index, ChangingParameter param)
+	{
+		parameters[index] = param;
+	}
 
 	public static void SetData<T>(string itemParameters, T item){
 		List<string> parameters = itemParameters.Split("\n").ToList();
@@ -71,8 +87,8 @@ public class Item : GroupElement
 [Serializable]
 public struct ChangingParameter
 {
-	public string parameter;
+	public int id;
+	public string nameParameter;
 	public bool changeResult;
-	public bool changeParameter;
 	public int changing;
 }
