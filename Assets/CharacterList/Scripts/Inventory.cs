@@ -7,22 +7,10 @@ public class Inventory : CharacterPart
 	[SerializeField] private List<Item> items;
 
 	[SerializeField] private string nameInventory;
-	public ItemType typeItem;
 
 	[TextArea(15,20)]
 	 public string valueItem;
 
-	 private void Start(){
-		
-		switch(typeItem){
-			case ItemType.Item:
-				AddItem<Item>();
-				break;
-			case ItemType.ActionItem:
-				AddItem<ActionItem>();
-				break;
-		}
-	 }
 
 	public void AddItem<T>() where T : Item{
 		  T newItem = new GameObject("Item").AddComponent<T>();
@@ -38,9 +26,3 @@ public class Inventory : CharacterPart
 	}
 }
 
-
-[Serializable] 
-public enum ItemType{
-	Item,
-	ActionItem
-}

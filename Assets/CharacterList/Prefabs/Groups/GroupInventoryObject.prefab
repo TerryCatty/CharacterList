@@ -51,3 +51,5 @@ MonoBehaviour:
   elements: []
   capacityInventory: 0
   nameInputCapacity: InventoryCapacity
+  listCells: []
+  prefabCell: {fileID: 2987488290127017502, guid: cb86f6ce20c4c5b5aba8b58fa5d5ce52, type: 3}

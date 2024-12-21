@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GroupElement : MonoBehaviour
 {
-   	public string nameElement {get; private set;}
+   	public string nameElement;
 	
 	public ElementUI prefabUI;
 	

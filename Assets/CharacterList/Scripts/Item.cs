@@ -5,6 +5,10 @@ using UnityEngine;
 public class Item : GroupElement
 {
 	public string description;
+	public int maxStack;
+	
+	public List<ChangingParameter> parameters;
+	
 
 	public static void SetData<T>(string itemParameters, T item){
 		List<string> parameters = itemParameters.Split("\n").ToList();
@@ -62,4 +66,13 @@ public class Item : GroupElement
 
 		return item;
 	}
+}
+
+[Serializable]
+public struct ChangingParameter
+{
+	public string parameter;
+	public bool changeResult;
+	public bool changeParameter;
+	public int changing;
 }

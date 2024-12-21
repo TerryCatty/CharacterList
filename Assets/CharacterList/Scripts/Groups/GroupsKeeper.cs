@@ -24,19 +24,22 @@ public class GroupsKeeper : MonoBehaviour
 	{
 		if(characterGroups.Where(g => g.groupName == groupName).Count() > 0) return;
 		
+		if(groupName.Replace(" ", "") == "") return;
 		
 		ChangeType();
 		
 		Group newGroup = Instantiate(group.gameObject, transform.position, Quaternion.identity).GetComponent<Group>();
 		
 		newGroup.SetName(groupName);
-		newGroup.SetCreationPanel(GroupCreateUI);
 		newGroup.groupKeeper = this;
 		
 		AddGroup(newGroup);
 		newGroup.transform.SetParent(player.transform);
 		
 		RefreshGroups();
+		
+		newGroup.SetCreationPanel(GroupCreateUI);
+		
 	}
 	
 	private void ChangeType()
@@ -70,6 +73,8 @@ public class GroupsKeeper : MonoBehaviour
 	
 	public void OpenWindow()
 	{
+		if(GroupCreateUI != null) return;
+		
 		GroupCreateUI = ManagerUI.instance.OpenWindow(prefabGroupCreate);
 		
 		InitParameter();	

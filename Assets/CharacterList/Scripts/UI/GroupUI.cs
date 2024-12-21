@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mono.Cecil;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -10,18 +9,18 @@ using UnityEngine.UI;
 public class GroupUI : MonoBehaviour
 {
 	public List<ElementUI> elementsUI;
-	[SerializeField] private Transform scrollGameobject;
+	[SerializeField] protected Transform scrollGameobject;
 	
-	[SerializeField] private TMP_InputField nameGroupText;
+	[SerializeField] protected TMP_InputField nameGroupText;
 	
-	[SerializeField] private GameObject CreatePanelParameterPrefab;
-	private GameObject CreatePanelParameter;
+	[SerializeField] protected GameObject CreatePanelParameterPrefab;
+	protected GameObject CreatePanelParameter;
 	
 	
 	public Group group;
 	
-	private TMP_Dropdown dropdown;
-	private TypeElementGroup typeElement;
+	protected TMP_Dropdown dropdown;
+	protected TypeElementGroup typeElement;
 	
 	
 	public void SetNameGroup(string value)
@@ -37,15 +36,17 @@ public class GroupUI : MonoBehaviour
 	
 	public void OpenWindow()
 	{
+		if(CreatePanelParameter != null) return;
+		
 		CreatePanelParameter = ManagerUI.instance.OpenWindow(CreatePanelParameterPrefab);
 		
 		InitElement();	
 	}
 	
-	public void InitElement()
+	public virtual void InitElement()
 	{
 		
-		dropdown = CreatePanelParameter.GetComponentsInChildren<TMP_Dropdown>().ToList().First(but => but.gameObject.name == "ChooseType");
+ 		dropdown = CreatePanelParameter.GetComponentsInChildren<TMP_Dropdown>().ToList().First(but => but.gameObject.name == "ChooseType");
 		
 		SetCloseButton();
 		
@@ -75,8 +76,10 @@ public class GroupUI : MonoBehaviour
 		ManagerUI.instance.CloseWindow(CreatePanelParameter);
 	}
 	
-	public void CreateParameter(string nameParameter)
+	public virtual void CreateParameter(string nameParameter)
 	{
+		if(nameParameter.Replace(" ", "") == "") return;
+		
 		ChangeType();
 		group.AddElement(nameParameter, typeElement);
 		Debug.Log("element added");
@@ -84,7 +87,9 @@ public class GroupUI : MonoBehaviour
 	
 	public void ChangeType()
 	{
-		typeElement = AllDictionary.instance.elementsDictionary.First(par => par.type.ToString() == dropdown.options[dropdown.value].text.ToLower()).type;
+		string equalseText = dropdown.options[dropdown.value].text.ToLower().Replace(" ", "");
+		
+		typeElement = AllDictionary.instance.elementsDictionary.First(par => par.type.ToString().ToLower() == equalseText).type;
 		Debug.Log("type changed");
 	}
 	public virtual ElementUI Create(GroupElement elementUI)
@@ -92,6 +97,15 @@ public class GroupUI : MonoBehaviour
 		ParameterUI newElement = Instantiate(elementUI.prefabUI.GetComponent<ParameterUI>(), scrollGameobject);
 		newElement.SetName(elementUI.nameElement);
 		newElement.parameter = elementUI.ConvertTo<CharacterParameter>();;
+		
+		elementsUI.Add(newElement);
+		
+		return newElement;
+	}
+	
+	public virtual ElementUI CreateOnlyUI<T>(T elementUI) where T : ElementUI
+	{
+		T newElement = Instantiate(elementUI.gameObject, scrollGameobject).GetComponent<T>();
 		
 		elementsUI.Add(newElement);
 		
