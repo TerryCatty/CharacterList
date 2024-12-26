@@ -44,7 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68fba037fcdfeb45eaa8c673dd2794f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nameParameter: 
-  nameTypeParameter: 
+  path: Elements/
+  nameElement: 
   prefabUI: {fileID: 7279969144819301577, guid: 54543d4978a85c7058c9b0d8ba4a2b05, type: 3}
+  ObjectUI: {fileID: 0}
+  group: {fileID: 0}
   value: 

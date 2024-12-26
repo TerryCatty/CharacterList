@@ -44,10 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9172d6cb23b00b78a3eaf2b19b4da0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nameParameter: 
-  nameTypeParameter: 
+  path: Elements/
+  nameElement: 
   prefabUI: {fileID: 3060982149809764230, guid: a3caf091565b5efaea3a9da83d263176, type: 3}
   ObjectUI: {fileID: 0}
   group: {fileID: 0}
   value: 0
-  isModificate: 0
+  isModificate: 1
+  isChosen: 0

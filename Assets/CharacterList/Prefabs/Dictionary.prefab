@@ -50,13 +50,9 @@ MonoBehaviour:
   - type: 1
     prefab: {fileID: 6443845118960517294, guid: 2a22d067e3038218eb5c07ce7a0bb952, type: 3}
   - type: 2
-    prefab: {fileID: 0}
-  - type: 3
     prefab: {fileID: 8597294248110126288, guid: dd69a0fbe77736fa3b4e070a41ad521e, type: 3}
-  - type: 4
-    prefab: {fileID: 2454108068232192939, guid: bac838854149327fe89789a97c907906, type: 3}
   groupsDictionary:
   - type: Parameters
     prefab: {fileID: 6677098000853629656, guid: 6f555d8455e720f68b40bf1a609f3c95, type: 3}
   - type: Inventory
-    prefab: {fileID: 6677098000853629656, guid: 6fcfbe96d898f58eeb869509b1c5a743, type: 3}
+    prefab: {fileID: 2656749230416763047, guid: 6fcfbe96d898f58eeb869509b1c5a743, type: 3}

@@ -44,12 +44,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 984bc757f12959ef58e40ed17ea00785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  path: GroupInventory/
   groupPrefab: {fileID: -2506548676573519634, guid: 0e6a02db8ca06194f926a1fbe51ad3a8, type: 3}
   groupUI: {fileID: 0}
   _nameGroup: 
   groupKeeper: {fileID: 0}
   elements: []
+  canEditGroup: 1
+  idArray: []
   capacityInventory: 0
   nameInputCapacity: InventoryCapacity
-  listCells: []
+  cells:
+    listCells: []
   prefabCell: {fileID: 2987488290127017502, guid: cb86f6ce20c4c5b5aba8b58fa5d5ce52, type: 3}

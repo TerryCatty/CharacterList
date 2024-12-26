@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
-public class Group : MonoBehaviour
+public class Group : MonoBehaviour, ISaveable
 {
+	[SerializeField] protected string path;
 	[SerializeField] protected GroupUI groupPrefab;
 	[SerializeField] protected GroupUI groupUI;
 	[SerializeField] protected string _nameGroup;
@@ -16,11 +18,33 @@ public class Group : MonoBehaviour
 	
 	protected GameObject creationPanel;
 	
+	[SerializeField] private bool canEditGroup;
+	
+	protected int id;
+	public bool canEdit => canEditGroup;
+	public List<GroupElement> getElements => elements;
+	[SerializeField] protected List<idElements> idArray;
+	protected int countElements;
+	
+	public int getId => id;
+	
+	public string getPath => path;
+	
 	public virtual void SetCreationPanel(GameObject panel)
 	{
 		creationPanel = panel;
 	}
+	
+	public virtual void Init()
+	{
+		SaveManager.instance.AddSavingObject(this);
+		LoadData();
+	}
 
+	public void SetId(int id)
+	{
+		this.id = id;
+	}
 
 	public void SetName(string name)
 	{
@@ -42,15 +66,29 @@ public class Group : MonoBehaviour
 		
 	}
 	
+	public void ResetData()
+	{
+		SaveManager.DeleteKey(SaveManager.instance.startFolder + path, "Group" + id);
+	}
+	
 	public virtual void RemoveElement(GroupElement element)
 	{
+		idArray.Remove(idArray.First(arr => arr.id == element.getId));
 		elements.Remove(element);
 	}
 	
 	public void DeleteGroup()
 	{
+		ResetData();
+		SaveManager.instance.RemoveSaveableObject(this);
 		groupKeeper.RemoveGroup(this);
 		Destroy(groupUI.gameObject);
+		
+		for(int i = 0; i < elements.Count; i++)
+		{
+			elements[i].ResetData();
+		}
+		
 		Destroy(gameObject);
 	}
 	
@@ -60,10 +98,29 @@ public class Group : MonoBehaviour
 	public List<GroupElement> GetElements() => elements;
 	
 	
-	public void SetUI(GroupUI objectUI)
+	public virtual void SetUI(GroupUI objectUI)
 	{
 		groupUI = objectUI;
 		groupUI.group = this;
 		groupUI.SetNameGroup(groupName);
-	} 
+		Debug.Log(groupUI.gameObject.name);
+	}
+
+   public virtual void SaveData()
+	{
+		string saveStr = JsonUtility.ToJson(this);
+		SaveManager.SetString(SaveManager.instance.startFolder + path, "Group" + id, saveStr);
+		
+	}
+	
+	public virtual void LoadData()
+	{
+		if(SaveManager.HasKey(SaveManager.instance.startFolder + path, "Group" + id))
+		{
+			string loadStr = SaveManager.GetString(SaveManager.instance.startFolder + path, "Group" + id);
+			
+			JsonUtility.FromJsonOverwrite(loadStr, this);
+			elements.Clear();
+		}
+	}
 }

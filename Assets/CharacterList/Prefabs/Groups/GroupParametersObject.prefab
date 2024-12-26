@@ -44,8 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2ab21efd7756c46cbb3da8646de9402, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  path: GroupParameters/
   groupPrefab: {fileID: 4636477857171016515, guid: 280957a81eef4821f914a974a6d5e5c5, type: 3}
   groupUI: {fileID: 0}
   _nameGroup: 
   groupKeeper: {fileID: 0}
-  parameters: []
+  elements: []
+  canEditGroup: 1
+  idArray: []

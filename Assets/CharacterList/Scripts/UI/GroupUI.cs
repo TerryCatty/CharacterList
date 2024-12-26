@@ -31,11 +31,15 @@ public class GroupUI : MonoBehaviour
 	
 	public void ChangeNameGroup(string name)
 	{
+		if(group.canEdit == false) return;
+		
 		group.SetName(name);
 	}
 	
 	public void OpenWindow()
 	{
+		if(group.canEdit == false) return;
+		
 		if(CreatePanelParameter != null) return;
 		
 		CreatePanelParameter = ManagerUI.instance.OpenWindow(CreatePanelParameterPrefab);
@@ -78,6 +82,8 @@ public class GroupUI : MonoBehaviour
 	
 	public virtual void CreateParameter(string nameParameter)
 	{
+		if(group.canEdit == false) return;
+		
 		if(nameParameter.Replace(" ", "") == "") return;
 		
 		ChangeType();
@@ -97,6 +103,7 @@ public class GroupUI : MonoBehaviour
 		ParameterUI newElement = Instantiate(elementUI.prefabUI.GetComponent<ParameterUI>(), scrollGameobject);
 		newElement.SetName(elementUI.nameElement);
 		newElement.parameter = elementUI.ConvertTo<CharacterParameter>();;
+		newElement.Init();
 		
 		elementsUI.Add(newElement);
 		
@@ -106,6 +113,8 @@ public class GroupUI : MonoBehaviour
 	public virtual ElementUI CreateOnlyUI<T>(T elementUI) where T : ElementUI
 	{
 		T newElement = Instantiate(elementUI.gameObject, scrollGameobject).GetComponent<T>();
+		
+		newElement.Init();
 		
 		elementsUI.Add(newElement);
 		

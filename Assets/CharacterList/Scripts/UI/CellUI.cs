@@ -32,8 +32,9 @@ public class CellUI : ElementUI
 [Serializable]
 public class Cell
 {
-	public Item item;
 	
 	public int count;
 	public bool isTake => item != null;
+	public int idItem;
+	public Item item;
 }

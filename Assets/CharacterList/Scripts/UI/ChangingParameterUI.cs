@@ -55,11 +55,19 @@ public class ChangingParameterUI : ElementUI
 	
 	public void DeleteParameter()
 	{
-		
+		itemUI.DeleteChangingParameter(id);
+		Destroy(gameObject);
 	}
 
 	public void SetId(int value)
 	{
 		id = value;
+	}
+	public void SetParameter(ChangingParameter parameter)
+	{
+		valueText.text = parameter.changing.ToString();
+		nameText.text = parameter.nameParameter;
+		changeResult.isOn = parameter.changeResult;
+		
 	}
 }

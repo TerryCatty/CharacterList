@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class ItemUI : ElementUI
 {
@@ -23,6 +24,13 @@ public class ItemUI : ElementUI
 		
 		nameElement = item.nameElement;
 		nameText.text = nameElement;
+		
+		int count = item.parameters.Count;
+		
+		for(int i = 0; i < count; i++)
+		{
+			CreateUI(item.parameters[i].id, item.parameters[i]);
+		}
 	}
 	
 	public void ChangeName()
@@ -46,23 +54,21 @@ public class ItemUI : ElementUI
 		item.AddChangingParameter(parameter);
 		
 		CreateUI(id);
-				
-		RefreshParameters();
 	}
-	private void CreateUI(int id)
+	private void CreateUI(int id, ChangingParameter parameter  = new ChangingParameter())
 	{
 		ChangingParameterUI newParameter = Instantiate(changingParameterUIPrefab, parametersKeeper.transform);
 		
 		
 		newParameter.SetId(id);
 		newParameter.SetItem(this);
+		newParameter.SetParameter(parameter);
 	}
 	
 	public void DeleteChangingParameter(int id)
 	{
 		item.RemoveChangingParameter(id);
 		
-		RefreshParameters();
 	}
 	
 	public void ChangeItemParameter(int id, ChangingParameter param)
@@ -74,8 +80,5 @@ public class ItemUI : ElementUI
 	{
 		ManagerUI.instance.CloseWindow(gameObject);
 	}
-	private void RefreshParameters()
-	{
-		
-	}
+	
 }

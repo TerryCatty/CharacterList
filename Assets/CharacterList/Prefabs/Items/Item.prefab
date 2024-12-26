@@ -44,7 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10017d5a35b18e10dad87d8800117dfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabUI: {fileID: 6086899563582868529, guid: 49778d5e90e9bd8649d194f6eb6eced0, type: 3}
+  path: Items/
+  nameElement: 
+  prefabUI: {fileID: 0}
   ObjectUI: {fileID: 0}
   group: {fileID: 0}
   description: Just apple
+  maxStack: 16
+  parameters: []
+  idCount: 0
+  removeAfterRoll: 1
+  modPlayer: {fileID: 0}

@@ -20,6 +20,7 @@ public struct ElementType
 {
 	public TypeElementGroup type;
 	public GroupElement prefab;
+
 }
 
 

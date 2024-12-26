@@ -11,16 +11,30 @@ public class ParameterUI_Number : ParameterUI
 	[SerializeField] private float max_height;
 	[SerializeField] private float default_height;
 	
-	private ModificatorsPlayer modPlayer;
+	private PlayerRoll modPlayer;
+	IntParameter intParameter;
+	Toggle selectToggle;
 	
 	private void Start()
 	{
-		modPlayer = parameter.group.groupKeeper.GetComponent<ModificatorsPlayer>();
-		modificateToggle.onValueChanged.AddListener(delegate{Modificate();});
+		intParameter = parameter.GetComponent<IntParameter>();
+		selectToggle = GetComponentInChildren<Toggle>();
+		modPlayer = parameter.group.groupKeeper.GetComponent<PlayerRoll>();
 	}
 	
 	public void EditMenu()
 	{
+		if(parameter.group.canEdit == false)
+		{
+			editMenu.SetActive(false);
+			
+			
+			GetComponent<RectTransform>().sizeDelta = editMenu.activeInHierarchy ? 
+			new Vector2(defalut_width, max_height) :
+			new Vector2(defalut_width, default_height);
+		
+			return;
+		}
 		
 		editMenu.SetActive(!editMenu.activeInHierarchy);
 		
@@ -29,18 +43,58 @@ public class ParameterUI_Number : ParameterUI
 		new Vector2(defalut_width, default_height);
 		
 		
-		modificateToggle.isOn = parameter.GetComponent<IntParameter>().isModificate;
+		modificateToggle.isOn = intParameter.isModificate;
 	}
 	
-	public void ChooseParameter()
+	public void SelectToggle()
 	{
-		if(parameter.GetComponent<IntParameter>().isModificate == false || editMenu.activeInHierarchy) return;
+		SelectParameter();
+	}
+	
+	
+	public void SelectParameter(bool changeFromParameter = false, bool value = false)
+	{
+		if(changeFromParameter == false)
+		{
+			if(intParameter.isModificate == false) 
+			{
+				selectToggle.isOn = false;
+				modPlayer.SetParameter(null);
+				intParameter.isChosen = selectToggle.isOn;
+				
+				return;
+			}
+			
+			value = intParameter.isChosen;
+		}	
 		
-		modPlayer.SetParameter(parameter.GetComponent<IntParameter>());
+		
+		if(value || intParameter.isModificate == false)
+		{
+			modPlayer.SetParameter(null);
+			selectToggle.isOn = false;
+		}else
+		{
+			modPlayer.SetParameter(intParameter);
+			selectToggle.isOn = true;
+		}
+		
+		intParameter.isChosen = selectToggle.isOn;
+		Debug.Log(intParameter.isChosen);
 	}
 	
-	private void Modificate()
+	
+	public void Modificate()
 	{
-		parameter.GetComponent<IntParameter>().isModificate = modificateToggle.isOn;
+		if(parameter.group.canEdit == false) return;
+		
+		intParameter.isModificate = modificateToggle.isOn;
+		
+		if(modificateToggle.isOn == false)
+		{
+			modPlayer.SetParameter(null);
+			selectToggle.isOn = false;
+			intParameter.isChosen = selectToggle.isOn;
+		}
 	}
 }
