@@ -36,6 +36,7 @@ public class ItemUI : ElementUI
 	public void ChangeName()
 	{
 		item.SetName(nameText.text);
+		item.SaveData();
 	}
 	
 	public void DeleteItem()
@@ -52,6 +53,7 @@ public class ItemUI : ElementUI
 		parameter.id = id;
 		
 		item.AddChangingParameter(parameter);
+		item.SaveData();
 		
 		CreateUI(id);
 	}
@@ -68,12 +70,14 @@ public class ItemUI : ElementUI
 	public void DeleteChangingParameter(int id)
 	{
 		item.RemoveChangingParameter(id);
+		item.SaveData();
 		
 	}
 	
 	public void ChangeItemParameter(int id, ChangingParameter param)
 	{
 		item.ChangeParameter(id, param);
+		item.SaveData();
 	}
 	
 	public void ClosePanel()

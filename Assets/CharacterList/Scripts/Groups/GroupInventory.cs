@@ -50,13 +50,12 @@ public class GroupInventory : Group
 		{	
 			
 			Item newItem = Instantiate(prefab.gameObject, transform.position, Quaternion.identity).GetComponent<Item>();
-			newItem.SetName(nameItem);
+			
+			newItem.SetParameters(countElements, nameItem, this);
 			countElements++;
 			
-			newItem.SetId(countElements);
-			
-			newItem.group = this;
 			newItem.Init();
+			newItem.SetParameters(newItem.getId, nameItem, this);
 			
 			newItem.transform.SetParent(transform);
 			
@@ -64,6 +63,7 @@ public class GroupInventory : Group
 			
 			AddItem(newItem, targetIndex);
 		}
+		SaveData();
 		
 	}
 	
@@ -81,6 +81,7 @@ public class GroupInventory : Group
 			
 			groupUI.elementsUI[targetIndex].GetComponent<CellUI>().SetCell(cells.listCells[targetIndex]);
 			
+			SaveData();
 		}
 		
 		catch
@@ -136,16 +137,17 @@ public class GroupInventory : Group
 			}
 		}
 		
+		SaveData();
 	}
 	
 	
    public override void SaveData()
 	{
 		string saveStr = JsonUtility.ToJson(this);
-		SaveManager.SetString(SaveManager.instance.startFolder + path, "Group" + id, saveStr);
+		SaveManager.instance.SetString(SaveManager.instance.startFolder + path, "Group" + id, saveStr);
 		
 		saveStr = JsonUtility.ToJson(cells);
-		SaveManager.SetString(SaveManager.instance.startFolder + path, "Group" + id + "Cells", saveStr);
+		SaveManager.instance.SetString(SaveManager.instance.startFolder + path, "Group" + id + "Cells", saveStr);
 		
 		PlayerPrefs.Save();
 	}

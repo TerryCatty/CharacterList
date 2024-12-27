@@ -15,11 +15,10 @@ public class GroupParameters : Group
 		if(elements.Where(p => p.nameElement == nameParameter).Count() > 0) return;
 		
 		CharacterParameter newParameter = Instantiate(prefab.gameObject, transform.position, Quaternion.identity).GetComponent<CharacterParameter>();
-		newParameter.SetName(nameParameter);
-		newParameter.group = this;
+		
+		newParameter.SetParameters(countElements, nameParameter, this);
 		
 		newParameter.transform.SetParent(transform);
-		newParameter.SetId(countElements);
 		elements.Add(newParameter);
 		
 		idElements newElement = new idElements();
@@ -28,9 +27,11 @@ public class GroupParameters : Group
 		idArray.Add(newElement);
 		
 		newParameter.Init();
+		newParameter.SetParameters(newParameter.getId, nameParameter, this);
 		
 		
 		countElements++;
+		SaveData();
 		
 		CreateElementUI();
 	}
@@ -44,13 +45,6 @@ public class GroupParameters : Group
 			if(parameter.ObjectUI == null)
 				parameter.SetUI(groupUI.Create(parameter));
 		}
-	}
-	public override void SaveData()
-	{
-		string saveStr = JsonUtility.ToJson(this);
-		SaveManager.SetString(SaveManager.instance.startFolder + path, "Group" + id, saveStr);
-		
-		
 	}
 
 	public override void LoadData()

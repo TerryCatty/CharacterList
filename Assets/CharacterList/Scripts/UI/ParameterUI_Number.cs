@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,8 +16,9 @@ public class ParameterUI_Number : ParameterUI
 	IntParameter intParameter;
 	Toggle selectToggle;
 	
-	private void Start()
+	public override void Init()
 	{
+		base.Init();
 		intParameter = parameter.GetComponent<IntParameter>();
 		selectToggle = GetComponentInChildren<Toggle>();
 		modPlayer = parameter.group.groupKeeper.GetComponent<PlayerRoll>();

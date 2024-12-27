@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using UnityEditor.Rendering;
 
 public class GroupsKeeper : MonoBehaviour, ISaveable
 {
@@ -22,11 +23,21 @@ public class GroupsKeeper : MonoBehaviour, ISaveable
 	private GameObject createdParameters;
 	private List<Transform> listCreateParameters;
 	
-	[SerializeField] private List<idElements> idArray;
+	[SerializeField] private saveGroupKeeper saveData;
 	private int countGroups;
 	
 	private void Start()
 	{
+		SaveManager.instance.AddSavingObject(this);
+	}
+	public void StartLoad(bool resetData = true)
+	{
+		int count = characterGroups.Count;
+		for(int i = 0; i < count; i++)
+		{
+			characterGroups[0].DeleteGroup(resetData);
+		}
+		
 		SaveManager.instance.AddSavingObject(this);
 		LoadData();
 	}
@@ -55,10 +66,11 @@ public class GroupsKeeper : MonoBehaviour, ISaveable
 		idElements newId = new idElements();
 		newId.id = id;
 		newId.type = type;
-		idArray.Add(newId);
+		saveData.idArray.Add(newId);
 		AddGroup(newGroup);
 		
 		newGroup.Init();
+		newGroup.groupKeeper = this;
 		
 		newGroup.transform.SetParent(player.transform);
 		
@@ -68,6 +80,7 @@ public class GroupsKeeper : MonoBehaviour, ISaveable
 		
 		countGroups++;
 		
+		SaveData();
 	}
 	
 	private void ChangeType(string type)
@@ -84,7 +97,8 @@ public class GroupsKeeper : MonoBehaviour, ISaveable
 	public void RemoveGroup(Group group)
 	{
 		characterGroups.Remove(group);
-		idArray.Remove(idArray.First(arr => arr.id == group.getId));
+		saveData.idArray.Remove(saveData.idArray.First(arr => arr.id == group.getId));
+		
 	}
 	
 	public void RefreshGroups()
@@ -138,8 +152,6 @@ public class GroupsKeeper : MonoBehaviour, ISaveable
 				else
 					createdParameters.SetActive(true);
 			}
-		
-			
 		}
 		catch
 		{
@@ -172,28 +184,29 @@ public class GroupsKeeper : MonoBehaviour, ISaveable
 	
 	public void ResetData()
 	{
-		SaveManager.DeleteKey(SaveManager.instance.startFolder, "GroupKeeper");
+		SaveManager.instance.DeleteKey(SaveManager.instance.startFolder, "GroupKeeper");
 	}
 	
 	public void SaveData()
 	{
-		string saveStr = JsonUtility.ToJson(this);
-		SaveManager.SetString(SaveManager.instance.startFolder, "GroupKeeper", saveStr);
-		
-		//PlayerPrefs.Save();
+		string saveStr = JsonUtility.ToJson(saveData);
+		SaveManager.instance.SetString(SaveManager.instance.startFolder, "GroupKeeper", saveStr);
 	}
 	
 	public void LoadData()
 	{
 		if(SaveManager.HasKey(SaveManager.instance.startFolder, "GroupKeeper"))
 		{
+			saveData.idArray = new List<idElements>();
+		
 			string loadStr = SaveManager.GetString(SaveManager.instance.startFolder, "GroupKeeper");
 			
-			JsonUtility.FromJsonOverwrite(loadStr, this);
+			JsonUtility.FromJsonOverwrite(loadStr, saveData);
 			countGroups = 0;
 			characterGroups.Clear();
 			
-			foreach(idElements group in idArray)
+			
+			foreach(idElements group in saveData.idArray)
 			{
 				LoadGroup(group.id, group.type);
 			}
@@ -207,10 +220,10 @@ public class GroupsKeeper : MonoBehaviour, ISaveable
 		
 		Group newGroup = Instantiate(group.gameObject, transform.position, Quaternion.identity).GetComponent<Group>();
 		
-		newGroup.groupKeeper = this;
 		newGroup.SetId(id);
 		
 		newGroup.Init();
+		newGroup.groupKeeper = this;
 		
 		
 		AddGroup(newGroup);
@@ -232,3 +245,9 @@ public struct idElements
 	
 }
 
+
+[Serializable]
+public struct saveGroupKeeper
+{
+	public List<idElements> idArray;
+}

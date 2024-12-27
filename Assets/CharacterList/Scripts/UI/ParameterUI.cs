@@ -14,7 +14,7 @@ public class ParameterUI : ElementUI
 	
 	public CharacterParameter parameter;
 	
-	public override void Init()
+	public virtual new void Init()
 	{
 		nameText.onValueChanged.AddListener(delegate {ChangeNameParameter(nameText.text);});
 		valueText.onValueChanged.AddListener(delegate {ChangeValueParameter(valueText.text);});
@@ -30,6 +30,7 @@ public class ParameterUI : ElementUI
 		if(parameter.group.canEdit == false) return;
 		
 		parameter.SetName(name);
+		parameter.SaveData();
 	}
 	
 	public void SetValue(string value)
@@ -40,12 +41,13 @@ public class ParameterUI : ElementUI
 	public void ChangeValueParameter(string value)
 	{
 		parameter.SetValue(value);
+		parameter.SaveData();
 	}
 	
 	public void DeleteParameter()
 	{
 		if(parameter.group.canEdit == false) return;
 		
-		parameter.DeleteElement();
+		parameter.DeleteElement(true);
 	}
 }

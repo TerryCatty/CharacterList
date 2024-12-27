@@ -123,6 +123,6 @@ public class GroupUI : MonoBehaviour
 	
 	public void DeleteGroup()
 	{
-		group.DeleteGroup();
+		group.DeleteGroup(true);
 	}
 }

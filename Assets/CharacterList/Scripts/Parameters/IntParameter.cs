@@ -29,12 +29,14 @@ public class IntParameter : CharacterParameter
 		this.value = Int32.Parse(value);
 		
 		parameterUI?.SetValue(value);
+		SaveData();
 	}
 	
 	public void AddValue(int value)
 	{
 		this.value += value;
 		parameterUI.SetValue(this.value.ToString());
+		SaveData();
 	}
 	
 	public void SelectParameter()
@@ -42,12 +44,12 @@ public class IntParameter : CharacterParameter
 		parameterUI.SelectParameter(true, isChosen);
 	}
 
-	public override void DeleteElement()
-	{
-		ResetData();
-		base.DeleteElement();
+	// public override void DeleteElement(bool resetData)
+	// {
+	// 	if(resetData) ResetData();
+	// 	base.DeleteElement(resetData);
 		
-	}
+	// }
 
 	
 }

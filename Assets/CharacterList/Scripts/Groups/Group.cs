@@ -49,6 +49,7 @@ public class Group : MonoBehaviour, ISaveable
 	public void SetName(string name)
 	{
 		_nameGroup = name;
+		SaveData();
 	}
 
 	public virtual void AddElement(string nameItem, TypeElementGroup typeItem)
@@ -68,7 +69,7 @@ public class Group : MonoBehaviour, ISaveable
 	
 	public void ResetData()
 	{
-		SaveManager.DeleteKey(SaveManager.instance.startFolder + path, "Group" + id);
+		SaveManager.instance.DeleteKey(SaveManager.instance.startFolder + path, "Group" + id);
 	}
 	
 	public virtual void RemoveElement(GroupElement element)
@@ -77,17 +78,20 @@ public class Group : MonoBehaviour, ISaveable
 		elements.Remove(element);
 	}
 	
-	public void DeleteGroup()
+	public void DeleteGroup(bool resetData)
 	{
-		ResetData();
+		if(resetData) ResetData();
 		SaveManager.instance.RemoveSaveableObject(this);
 		groupKeeper.RemoveGroup(this);
-		Destroy(groupUI.gameObject);
+		
 		
 		for(int i = 0; i < elements.Count; i++)
 		{
-			elements[i].ResetData();
+			elements[i].DeleteElement(resetData);
 		}
+		
+		
+		if(groupUI != null) Destroy(groupUI.gameObject);
 		
 		Destroy(gameObject);
 	}
@@ -103,13 +107,13 @@ public class Group : MonoBehaviour, ISaveable
 		groupUI = objectUI;
 		groupUI.group = this;
 		groupUI.SetNameGroup(groupName);
-		Debug.Log(groupUI.gameObject.name);
 	}
 
    public virtual void SaveData()
 	{
 		string saveStr = JsonUtility.ToJson(this);
-		SaveManager.SetString(SaveManager.instance.startFolder + path, "Group" + id, saveStr);
+		Debug.Log(saveStr + " - " + SaveManager.instance.startFolder + path + "Group" + id);
+		SaveManager.instance.SetString(SaveManager.instance.startFolder + path, "Group" + id, saveStr);
 		
 	}
 	

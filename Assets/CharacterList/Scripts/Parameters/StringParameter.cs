@@ -14,6 +14,7 @@ public class StringParameter : CharacterParameter, ISaveable
 		this.value = value;
 		
 		textUI.SetValue(value);
+		SaveData();
 	}
 
 	public override void SetName(string name)
@@ -21,6 +22,7 @@ public class StringParameter : CharacterParameter, ISaveable
 		base.SetName(name);
 		
 		textUI?.SetName(name);
+		SaveData();
 	}
 	public override void SetUI(ElementUI element)
 	{
@@ -35,11 +37,11 @@ public class StringParameter : CharacterParameter, ISaveable
 		keySave = "NumberParameter" + id + "FromGroup" + group.getId;
 		base.Init();
 	}
-	public override void DeleteElement()
-	{
-		ResetData();
-		base.DeleteElement();
+	// public override void DeleteElement()
+	// {
+	// 	ResetData();
+	// 	base.DeleteElement();
 		
-	}
+	// }
 	
 }
