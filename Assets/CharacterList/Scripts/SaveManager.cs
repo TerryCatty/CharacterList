@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 
 public interface ISaveable
@@ -12,15 +12,19 @@ public interface ISaveable
 	public void SaveData();
 	public void ResetData();
 }
+
 public class SaveManager : MonoBehaviour
 {
 	[SerializeField] private List<ISaveable> savingObjects = new List<ISaveable>();
+
+	[SerializeField] private GroupsKeeper groupKeeper;
+
+    private const string saveExt = ".dnd";
 	
-	private const string saveExt = ".dnd";
+	[SerializeField] private string nameSave;
+	[SerializeField] private string saveFolder;
 	
-	[SerializeField] private string start;
-	
-	public string getStart => start;
+	public string getStart => nameSave;
 	
 	public static SaveManager instance;
 	
@@ -36,9 +40,16 @@ public class SaveManager : MonoBehaviour
 		_saveList.listSave = new List<SavePath>();
 		Load();
 	}
+
+	public void StartLoad(bool resetData)
+	{
+		savingObjects.Clear();
+        groupKeeper.StartLoad(resetData);
+
+    }
 	
 	public void SetStartFolder(string pathFolder){
-		start = pathFolder;
+        nameSave = pathFolder;
 	}
 	
 	public void AddSavingObject(ISaveable saveable)
@@ -71,12 +82,12 @@ public class SaveManager : MonoBehaviour
 	private void SavePath()
 	{
 		string saveStr = JsonUtility.ToJson( _saveList);
-		SaveSaveManager(Application.persistentDataPath, "SavesPath", saveStr);
+		SaveSaveManager(saveFolder + "/", "SavesPath", saveStr);
 		
 	}
 	private void Load()
 	{
-		string loadStr = GetString(Application.persistentDataPath, "SavesPath");
+		string loadStr = GetString(saveFolder + "/", "SavesPath");
 		
 		JsonUtility.FromJsonOverwrite(loadStr,  _saveList);
 	}
@@ -99,8 +110,8 @@ public class SaveManager : MonoBehaviour
 		File.WriteAllText(pathSave, value);
 		
 		SavePath newSavePath = new SavePath();
-		newSavePath.name = start;
-		newSavePath.path = Application.persistentDataPath + "/" + start + "/";
+		newSavePath.name = getStart;
+		newSavePath.path = saveFolder + "/" + getStart + "/";
 		
 		AddPath(newSavePath);
 		SavePath();
@@ -146,11 +157,16 @@ public class SaveManager : MonoBehaviour
 		File.WriteAllText(pathSave, value);
 		
 	}
+
+    public static bool HasKey(string path, string key)
+	{
+		Debug.Log(path + key + saveExt);
+		return File.Exists(path + key + saveExt);
+    }
 	
-	public static bool HasKey(string path, string key) => File.Exists(path + key + saveExt);
-	
-	public string startFolder => Application.persistentDataPath + "/" + start + "/";
+	public string startFolder => saveFolder + "/" + getStart + "/";
 }
+
 
 [Serializable]
 public struct SavePath

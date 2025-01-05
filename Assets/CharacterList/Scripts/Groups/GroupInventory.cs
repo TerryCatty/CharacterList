@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class GroupInventory : Group
 {
-	[SerializeField] private int capacityInventory;
 	
 	[SerializeField] private string nameInputCapacity;
 	
@@ -19,7 +18,7 @@ public class GroupInventory : Group
 	{
 		base.SetUI(objectUI);
 		
-		SetCapacity(capacityInventory);
+		SetCapacity(cells.capacity);
 		
 		
 			for(int i = 0; i < cells.listCells.Count; i++)
@@ -51,8 +50,8 @@ public class GroupInventory : Group
 			
 			Item newItem = Instantiate(prefab.gameObject, transform.position, Quaternion.identity).GetComponent<Item>();
 			
-			newItem.SetParameters(countElements, nameItem, this);
-			countElements++;
+			newItem.SetParameters(saveData.countElements, nameItem, this);
+            saveData.countElements++;
 			
 			newItem.Init();
 			newItem.SetParameters(newItem.getId, nameItem, this);
@@ -77,7 +76,7 @@ public class GroupInventory : Group
 			cells.listCells[targetIndex].item = item;
 			cells.listCells[targetIndex].count++;
 			
-			cells.listCells[targetIndex].idItem = countElements;
+			cells.listCells[targetIndex].idItem = saveData.countElements;
 			
 			groupUI.elementsUI[targetIndex].GetComponent<CellUI>().SetCell(cells.listCells[targetIndex]);
 			
@@ -119,11 +118,11 @@ public class GroupInventory : Group
 	
 	public void SetCapacity(int capacity)
 	{
-		capacityInventory = capacity;
+        cells.capacity = capacity;
 		
 		if(cells.listCells.Count < capacity)
 		{
-			for(int i = cells.listCells.Count; i < capacityInventory; i++)
+			for(int i = cells.listCells.Count; i < cells.capacity; i++)
 			{
 				cells.listCells.Add(new Cell());
 				groupUI.CreateOnlyUI(prefabCell);
@@ -131,7 +130,7 @@ public class GroupInventory : Group
 		}
 		else
 		{
-			for(int i = 0; i < capacityInventory; i++)
+			for(int i = 0; i < cells.capacity; i++)
 			{
 				groupUI.CreateOnlyUI(prefabCell);
 			}
@@ -143,7 +142,7 @@ public class GroupInventory : Group
 	
    public override void SaveData()
 	{
-		string saveStr = JsonUtility.ToJson(this);
+		string saveStr = JsonUtility.ToJson(saveData);
 		SaveManager.instance.SetString(SaveManager.instance.startFolder + path, "Group" + id, saveStr);
 		
 		saveStr = JsonUtility.ToJson(cells);
@@ -155,15 +154,17 @@ public class GroupInventory : Group
 	public override void LoadData()
 	{
 		if(SaveManager.HasKey(SaveManager.instance.startFolder + path, "Group" + id))
-		{
-			string loadStr = SaveManager.GetString(SaveManager.instance.startFolder + path, "Group" + id);
-			
-			JsonUtility.FromJsonOverwrite(loadStr, this);
-			
-			loadStr = SaveManager.GetString(SaveManager.instance.startFolder + path, "Group" + id + "Cells");
-			JsonUtility.FromJsonOverwrite(loadStr, cells);
-			
-			elements.Clear();
+        {
+            Debug.Log(SaveManager.instance.startFolder + path + "Group" + id);
+
+            string loadStr = SaveManager.GetString(SaveManager.instance.startFolder + path, "Group" + id);
+            saveData = JsonUtility.FromJson<SaveGroupData>(loadStr);
+
+
+            loadStr = SaveManager.GetString(SaveManager.instance.startFolder + path, "Group" + id + "Cells");
+            cells = JsonUtility.FromJson<CellsJson>(loadStr);
+
+            elements.Clear();
 			
 		}
 	}
@@ -201,4 +202,5 @@ public class GroupInventory : Group
 public struct CellsJson
 {
 	 public List<Cell> listCells;
+	public int capacity;
 }

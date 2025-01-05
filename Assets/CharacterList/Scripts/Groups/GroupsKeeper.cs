@@ -35,7 +35,7 @@ public class GroupsKeeper : MonoBehaviour, ISaveable
 		int count = characterGroups.Count;
 		for(int i = 0; i < count; i++)
 		{
-			characterGroups[0].DeleteGroup(resetData);
+			characterGroups[0].RequestDeleteGroup(resetData);
 		}
 		
 		SaveManager.instance.AddSavingObject(this);
@@ -94,11 +94,12 @@ public class GroupsKeeper : MonoBehaviour, ISaveable
 		characterGroups.Add(group);
 	}
 	
-	public void RemoveGroup(Group group)
+	public void RemoveGroup(Group group, bool resetData)
 	{
 		characterGroups.Remove(group);
 		saveData.idArray.Remove(saveData.idArray.First(arr => arr.id == group.getId));
 		
+		if(resetData) SaveData();
 	}
 	
 	public void RefreshGroups()
@@ -191,6 +192,8 @@ public class GroupsKeeper : MonoBehaviour, ISaveable
 	{
 		string saveStr = JsonUtility.ToJson(saveData);
 		SaveManager.instance.SetString(SaveManager.instance.startFolder, "GroupKeeper", saveStr);
+
+		Debug.Log(" GroupKeeper:" + saveStr);
 	}
 	
 	public void LoadData()

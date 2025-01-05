@@ -814,6 +814,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   value: 0
   modificationParameter: {fileID: 0}
+  rollWindowPrefab: {fileID: 6800039734870850128, guid: 6d058f684b054cc44824ec8d7c153109, type: 3}
   buffsItems:
   - {fileID: 1386152567}
 --- !u!114 &503690531
@@ -848,7 +849,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7808e9201bc1ffb03b7e6d22360aef35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start: Character1
+  groupKeeper: {fileID: 503690531}
+  nameSave: Character_2
+  saveFolder: C:/Users/Tercat/Documents/CharacterDnD
 --- !u!114 &503690533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1157,6 +1160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 642208444}
+  confirmPanelPrefab: {fileID: 3219827134997897278, guid: 895378eee609f4d44810c413f550ce0c, type: 3}
 --- !u!4 &678750471
 Transform:
   m_ObjectHideFlags: 0
@@ -2762,6 +2766,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: LoadTemplatePanel
       objectReference: {fileID: 0}
+    - target: {fileID: 961980360827078763, guid: babaf180dfd6fe5449d0da21fdc447cf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 961980360827078763, guid: babaf180dfd6fe5449d0da21fdc447cf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 8196807322015410265}
+    - target: {fileID: 961980360827078763, guid: babaf180dfd6fe5449d0da21fdc447cf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ClosePanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 961980360827078763, guid: babaf180dfd6fe5449d0da21fdc447cf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: LoadPanel, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 961980360827078763, guid: babaf180dfd6fe5449d0da21fdc447cf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 961980360827078763, guid: babaf180dfd6fe5449d0da21fdc447cf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 1450348447717899313, guid: babaf180dfd6fe5449d0da21fdc447cf, type: 3}
       propertyPath: m_Options.m_Options.Array.size
       value: 0
@@ -2872,11 +2900,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6435582471267458331, guid: babaf180dfd6fe5449d0da21fdc447cf, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 328.11
+      value: -268
       objectReference: {fileID: 0}
     - target: {fileID: 6435582471267458331, guid: babaf180dfd6fe5449d0da21fdc447cf, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -838
       objectReference: {fileID: 0}
     - target: {fileID: 6435582471267458331, guid: babaf180dfd6fe5449d0da21fdc447cf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2900,7 +2928,7 @@ PrefabInstance:
       objectReference: {fileID: 8196807322015410265}
     - target: {fileID: 8878239365729146490, guid: babaf180dfd6fe5449d0da21fdc447cf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Init
+      value: LoadSave
       objectReference: {fileID: 0}
     - target: {fileID: 8878239365729146490, guid: babaf180dfd6fe5449d0da21fdc447cf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName

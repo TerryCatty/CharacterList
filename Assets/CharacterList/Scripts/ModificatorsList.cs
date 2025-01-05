@@ -10,17 +10,22 @@ public class ModificatorsList : Item
 	
 	public override void CheckBuff(IntParameter parameter)
 	{
-		try
-		{
-			int modificator = modificators.First(m => m.valueParameter.Contains(parameter.value)).valueModificator;
-			
-			modPlayer.AddBuff(modificator);
-		}
-		catch
-		{
-			Debug.Log("");
-		}
+		
 	}
+
+    public override void CheckMod(IntParameter parameter)
+    {
+        try
+        {
+            int modificator = modificators.First(m => m.valueParameter.Contains(parameter.value)).valueModificator;
+
+            modPlayer.AddMod(modificator);
+        }
+        catch
+        {
+            Debug.Log("");
+        }
+    }
 
 }
 

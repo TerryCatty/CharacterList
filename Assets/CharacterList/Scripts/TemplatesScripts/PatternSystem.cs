@@ -4,6 +4,8 @@ public class PatternSystem : MonoBehaviour
 {
 	[SerializeField] private string templateFolder = "Template";
    [SerializeField] private string nameTemplate;
+
+	public string templatePath => templateFolder;
    
    [SerializeField] private GroupsKeeper groupsKeeper;
    [SerializeField] private LoadPanel loadPanel;

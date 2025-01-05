@@ -55,8 +55,8 @@ public class Item : GroupElement
 				{
 					if(param.nameParameter.ToLower() == parameter.nameElement)
 					{
-						if(param.changeResult) modPlayer.AddBuff(param.changing);
-						else modPlayer.ChangeParameter(param.nameParameter, param.changing);
+						if(!param.changeResult) 
+						 modPlayer.ChangeParameter(param.nameParameter, param.changing);
 					}
 				}
 				
@@ -64,6 +64,24 @@ public class Item : GroupElement
 		
 		if(removeAfterRoll) modPlayer.RemoveItem(this);
 	}
+
+    public virtual void CheckMod(IntParameter parameter)
+    {
+        foreach (ChangingParameter param in parameters)
+        {
+            if (parameter == null)
+            {
+                if (param.changeResult && param.nameParameter == "") modPlayer.AddMod(param.changing);
+            }
+            else
+            {
+                if (param.nameParameter.ToLower() == parameter.nameElement)
+                {
+                    if (param.changeResult) modPlayer.AddMod(param.changing);
+                }
+            }
+        }
+    }
 
 }
 

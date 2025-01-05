@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using UnityEditor.Overlays;
 
 public class GroupParameters : Group
 {
@@ -16,21 +17,21 @@ public class GroupParameters : Group
 		
 		CharacterParameter newParameter = Instantiate(prefab.gameObject, transform.position, Quaternion.identity).GetComponent<CharacterParameter>();
 		
-		newParameter.SetParameters(countElements, nameParameter, this);
+		newParameter.SetParameters(saveData.countElements, nameParameter, this);
 		
 		newParameter.transform.SetParent(transform);
 		elements.Add(newParameter);
 		
 		idElements newElement = new idElements();
-		newElement.id = countElements;
+		newElement.id = saveData.countElements;
 		newElement.type = typeParam.ToString();
-		idArray.Add(newElement);
+        saveData.idArray.Add(newElement);
 		
 		newParameter.Init();
 		newParameter.SetParameters(newParameter.getId, nameParameter, this);
-		
-		
-		countElements++;
+
+
+        saveData.countElements++;
 		SaveData();
 		
 		CreateElementUI();
@@ -49,14 +50,16 @@ public class GroupParameters : Group
 
 	public override void LoadData()
 	{
-		if(SaveManager.HasKey(SaveManager.instance.startFolder + path, "Group" + id))
-		{
-			string loadStr = SaveManager.GetString(SaveManager.instance.startFolder + path, "Group" + id);
+        Debug.Log(SaveManager.instance.startFolder + path + "Group" + id);
+
+        if (SaveManager.HasKey(SaveManager.instance.startFolder + path, "Group" + id))
+        {
+            string loadStr = SaveManager.GetString(SaveManager.instance.startFolder + path, "Group" + id);
+
+            saveData = JsonUtility.FromJson<SaveGroupData>(loadStr);
+            elements.Clear();
 			
-			JsonUtility.FromJsonOverwrite(loadStr, this);
-			elements.Clear();
-			
-			foreach(idElements group in idArray)
+			foreach(idElements group in saveData.idArray)
 			{
 				LoadElement(group.id, group.type);
 			}
@@ -77,8 +80,8 @@ public class GroupParameters : Group
 		newParameter.transform.SetParent(transform);
 		
 		elements.Add(newParameter);
-		
-		countElements++;
+
+        saveData.countElements++;
 		
 	}
 

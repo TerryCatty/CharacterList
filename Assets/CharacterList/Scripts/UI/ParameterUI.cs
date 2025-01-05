@@ -1,26 +1,73 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class ParameterUI : ElementUI
 {
-	[SerializeField] protected TMP_InputField nameText;
-	[SerializeField] protected TMP_InputField valueText;
-	
-	
-   	public string nameParameter => nameElement;
+	[SerializeField] protected TextMeshProUGUI nameText;
+	[SerializeField] protected TextMeshProUGUI valueText;
+    [SerializeField] protected TMP_InputField nameChangeText;
+    [SerializeField] protected TMP_InputField valueChangeText;
+    [SerializeField] protected GameObject[] editMenu;
+
+
+    public string nameParameter => nameElement;
 	
 	public float width;
 	public float height;
-	
-	public CharacterParameter parameter;
+
+    protected bool isEdit;
+
+    public CharacterParameter parameter;
 	
 	public virtual new void Init()
 	{
-		nameText.onValueChanged.AddListener(delegate {ChangeNameParameter(nameText.text);});
-		valueText.onValueChanged.AddListener(delegate {ChangeValueParameter(valueText.text);});
+
 	}
-	
-	public override void SetName(string name)
+
+    public virtual void EditMenu()
+    {
+        if (parameter.group.canEdit == false)
+        {
+            isEdit = false;
+
+
+            foreach (GameObject go in editMenu)
+            {
+                go.SetActive(isEdit);
+            }
+
+            SetValuesEditMenu();
+
+            SetSize();
+
+
+            return;
+        }
+
+        isEdit = !isEdit;
+
+        foreach (GameObject go in editMenu)
+        {
+            go.SetActive(isEdit);
+        }
+
+        SetValuesEditMenu(true);
+
+        SetSize();
+    }
+
+	protected virtual void SetSize()
+	{
+
+	}
+
+    protected virtual void SetValuesEditMenu(bool requireConfirm = false)
+    {
+
+    }
+
+    public override void SetName(string name)
 	{
 		nameText.text = name;
 	}
@@ -48,6 +95,6 @@ public class ParameterUI : ElementUI
 	{
 		if(parameter.group.canEdit == false) return;
 		
-		parameter.DeleteElement(true);
+		parameter.RemoveElement(true);
 	}
 }

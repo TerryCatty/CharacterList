@@ -10,14 +10,17 @@ public class GroupUI : MonoBehaviour
 {
 	public List<ElementUI> elementsUI;
 	[SerializeField] protected Transform scrollGameobject;
-	
-	[SerializeField] protected TMP_InputField nameGroupText;
+
+    [SerializeField] protected TextMeshProUGUI nameGroupText;
+    [SerializeField] protected TMP_InputField nameChangeGroupText;
 	
 	[SerializeField] protected GameObject CreatePanelParameterPrefab;
 	protected GameObject CreatePanelParameter;
 	
 	
 	public Group group;
+
+	private bool editMenuOpen;
 	
 	protected TMP_Dropdown dropdown;
 	protected TypeElementGroup typeElement;
@@ -26,16 +29,30 @@ public class GroupUI : MonoBehaviour
 	public void SetNameGroup(string value)
 	{
 		nameGroupText.text = value;
-		nameGroupText.onValueChanged.AddListener(delegate {ChangeNameGroup(nameGroupText.text);});
 	}
 	
 	public void ChangeNameGroup(string name)
 	{
 		if(group.canEdit == false) return;
 		
-		group.SetName(name);
+		group.RequireSetName(name, true);
 	}
 	
+	public void EditMenu()
+	{
+		editMenuOpen = !editMenuOpen;
+
+        nameGroupText.gameObject.SetActive(!editMenuOpen);
+
+        if (editMenuOpen == false && nameChangeGroupText.text != nameGroupText.text)
+            ChangeNameGroup(nameChangeGroupText.text);
+
+        nameChangeGroupText.gameObject.SetActive(editMenuOpen);
+		nameChangeGroupText.text = nameGroupText.text;
+
+
+    }
+
 	public void OpenWindow()
 	{
 		if(group.canEdit == false) return;
@@ -123,6 +140,6 @@ public class GroupUI : MonoBehaviour
 	
 	public void DeleteGroup()
 	{
-		group.DeleteGroup(true);
+		group.RequestDeleteGroup(true, true);
 	}
 }

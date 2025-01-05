@@ -7,6 +7,7 @@ public class PlayerRoll : MonoBehaviour
 	[SerializeField] private int value;
 
 	[SerializeField] private IntParameter modificationParameter;
+	[SerializeField] private RollWindow rollWindowPrefab;
 	
 	[SerializeField] private List<Item> buffsItems;
 	
@@ -36,28 +37,20 @@ public class PlayerRoll : MonoBehaviour
 	}
 	public void Roll()
 	{
-		CheckResult();
+		bonus = 0;
+
+        CheckResult();
 	}
 
 	public void CheckResult()
 	{
 		Debug.Log("Roll");
-		CheckBonus();
-		
-		if(modificationParameter != null)
-		{
-			modificationParameter.SelectParameter();
-		}
-		
-		modificationParameter = null;
-		
-		if(deletedItems.Count > 0) buffsItems = buffsItems.Except(deletedItems).ToList();
-	}
-	
-	
-	private void CheckBonus()
-	{
-		CheckBuffs();
+
+        CheckMod();
+
+        RollWindow rollWindow = ManagerUI.instance.OpenWindow(rollWindowPrefab.gameObject).GetComponent<RollWindow>();
+		rollWindow.SetText(bonus.ToString());
+		rollWindow.SetPlayerRoll(this);
 	}
 	
 	
@@ -68,12 +61,19 @@ public class PlayerRoll : MonoBehaviour
 			buff.CheckBuff(modificationParameter);
 		}
 	}
-	
-	public void AddBuff(int buff)
+    private void CheckMod()
+    {
+        foreach (Item buff in buffsItems)
+        {
+            buff.CheckMod(modificationParameter);
+        }
+    }
+
+    public void AddMod(int mod)
 	{
-		bonus += buff;
+		bonus += mod;
 		
-		Debug.Log("+" + buff);
+		Debug.Log("+" + mod);
 	}
 	
 	public void ChangeParameter(string nameParameter, int value)
@@ -92,4 +92,21 @@ public class PlayerRoll : MonoBehaviour
 			}
 		}
 	}
+
+	public void ConfirmRoll(bool applyBuffs)
+	{
+		if(applyBuffs)
+            CheckBuffs();
+
+
+
+        if (modificationParameter != null)
+        {
+            modificationParameter.SelectParameter();
+        }
+
+        modificationParameter = null;
+
+        if (deletedItems.Count > 0) buffsItems = buffsItems.Except(deletedItems).ToList();
+    }
 }

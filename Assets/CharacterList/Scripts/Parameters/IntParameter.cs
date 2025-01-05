@@ -1,6 +1,7 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class IntParameter : CharacterParameter
 {
@@ -10,6 +11,8 @@ public class IntParameter : CharacterParameter
 	public bool isChosen;
 	
 	private ParameterUI_Number parameterUI;
+
+	bool tempMod;
 	
 	public override void SetUI(ElementUI element)
 	{
@@ -31,8 +34,15 @@ public class IntParameter : CharacterParameter
 		parameterUI?.SetValue(value);
 		SaveData();
 	}
-	
-	public void AddValue(int value)
+
+    public override void SetName(string name)
+    {
+        base.SetName(name);
+        parameterUI?.SetName(name);
+        SaveData();
+    }
+
+    public void AddValue(int value)
 	{
 		this.value += value;
 		parameterUI.SetValue(this.value.ToString());
@@ -44,12 +54,19 @@ public class IntParameter : CharacterParameter
 		parameterUI.SelectParameter(true, isChosen);
 	}
 
-	// public override void DeleteElement(bool resetData)
-	// {
-	// 	if(resetData) ResetData();
-	// 	base.DeleteElement(resetData);
-		
-	// }
 
-	
+    public virtual void RequireSetMod(bool value)
+    {
+        tempMod = value;
+        confirmAction += ConfirmSetMod;
+    }
+    private void ConfirmSetMod()
+    {
+        SetMod(tempMod);
+    }
+
+	public void SetMod(bool value)
+	{
+		isModificate = value;
+	}
 }

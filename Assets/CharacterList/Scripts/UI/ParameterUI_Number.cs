@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class ParameterUI_Number : ParameterUI
 {
-	[SerializeField] private GameObject editMenu;
 	[SerializeField] private Toggle modificateToggle;
 	
 	
@@ -15,8 +14,10 @@ public class ParameterUI_Number : ParameterUI
 	private PlayerRoll modPlayer;
 	IntParameter intParameter;
 	Toggle selectToggle;
-	
-	public override void Init()
+
+
+
+    public override void Init()
 	{
 		base.Init();
 		intParameter = parameter.GetComponent<IntParameter>();
@@ -24,31 +25,48 @@ public class ParameterUI_Number : ParameterUI
 		modPlayer = parameter.group.groupKeeper.GetComponent<PlayerRoll>();
 	}
 	
-	public void EditMenu()
-	{
-		if(parameter.group.canEdit == false)
+
+    protected override void SetSize()
+    {
+        GetComponent<RectTransform>().sizeDelta = isEdit ?
+        new Vector2(defalut_width, max_height) :
+        new Vector2(defalut_width, default_height);
+    }
+
+    protected override void SetValuesEditMenu(bool requireConfirm = false)
+    {
+        if(isEdit) modificateToggle.isOn = intParameter.isModificate;
+
+        bool tempMod = modificateToggle.isOn;
+
+
+        if (!requireConfirm)
 		{
-			editMenu.SetActive(false);
-			
-			
-			GetComponent<RectTransform>().sizeDelta = editMenu.activeInHierarchy ? 
-			new Vector2(defalut_width, max_height) :
-			new Vector2(defalut_width, default_height);
+            intParameter.SetName(nameChangeText.text);
+            intParameter.SetValue(valueChangeText.text);
+			intParameter.SetMod(tempMod);
+        }
+		else
+		{
+            if (nameChangeText.text != nameText.text || valueChangeText.text != valueText.text)
+            {
+                if (isEdit == false)
+				{
+                    intParameter.RequireSetName(nameChangeText.text);
+                    intParameter.RequireSetValue(valueChangeText.text);
+                    intParameter.RequireSetMod(tempMod);
+					intParameter.OpenConfirmPanel();
+                }
+
+			}
+        }
 		
-			return;
-		}
-		
-		editMenu.SetActive(!editMenu.activeInHierarchy);
-		
-		GetComponent<RectTransform>().sizeDelta = editMenu.activeInHierarchy ? 
-		new Vector2(defalut_width, max_height) :
-		new Vector2(defalut_width, default_height);
-		
-		
-		modificateToggle.isOn = intParameter.isModificate;
-	}
-	
-	public void SelectToggle()
+
+        nameChangeText.text = nameText.text;
+		valueChangeText.text = valueText.text;
+    }
+
+    public void SelectToggle()
 	{
 		SelectParameter();
 	}
@@ -86,11 +104,9 @@ public class ParameterUI_Number : ParameterUI
 	}
 	
 	
-	public void Modificate()
+	public void ModificateOpen()
 	{
 		if(parameter.group.canEdit == false) return;
-		
-		intParameter.isModificate = modificateToggle.isOn;
 		
 		if(modificateToggle.isOn == false)
 		{
@@ -99,4 +115,5 @@ public class ParameterUI_Number : ParameterUI
 			intParameter.isChosen = selectToggle.isOn;
 		}
 	}
+
 }

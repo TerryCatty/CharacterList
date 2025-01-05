@@ -1,36 +1,38 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
-public class Group : MonoBehaviour, ISaveable
+public class Group : MonoBehaviour, ISaveable, IConfirmable
 {
 	[SerializeField] protected string path;
 	[SerializeField] protected GroupUI groupPrefab;
 	[SerializeField] protected GroupUI groupUI;
-	[SerializeField] protected string _nameGroup;
 	
 	public GroupsKeeper groupKeeper;
-	
-	public string groupName => _nameGroup;
+
+	[SerializeField] protected SaveGroupData saveData;
+
+    public string groupName => saveData.name;
 	
 	[SerializeField] protected List<GroupElement> elements;
 	
 	protected GameObject creationPanel;
 	
-	[SerializeField] private bool canEditGroup;
-	
 	protected int id;
-	public bool canEdit => canEditGroup;
+	public bool canEdit => saveData.canEditGroup;
 	public List<GroupElement> getElements => elements;
-	[SerializeField] protected List<idElements> idArray;
-	protected int countElements;
 	
 	public int getId => id;
 	
 	public string getPath => path;
-	
-	public virtual void SetCreationPanel(GameObject panel)
+
+
+	private Action confirmAction;
+    private GroupElement removableElementTemp;
+	private string nameTemp;
+
+    public virtual void SetCreationPanel(GameObject panel)
 	{
 		creationPanel = panel;
 	}
@@ -48,8 +50,24 @@ public class Group : MonoBehaviour, ISaveable
 
 	public void SetName(string name)
 	{
-		_nameGroup = name;
+        saveData.name = name;
+		groupUI?.SetNameGroup(name);
 		SaveData();
+	}
+
+	public void RequireSetName(string name, bool isConfirmRequire = false)
+	{
+		if (isConfirmRequire)
+        {
+			nameTemp = name;
+            confirmAction += ConfirmSetName;
+
+            ManagerUI.instance.ConfirmWindow("Change name?", this);
+        }
+		else
+		{
+			SetName(name);
+		}
 	}
 
 	public virtual void AddElement(string nameItem, TypeElementGroup typeItem)
@@ -72,29 +90,68 @@ public class Group : MonoBehaviour, ISaveable
 		SaveManager.instance.DeleteKey(SaveManager.instance.startFolder + path, "Group" + id);
 	}
 	
-	public virtual void RemoveElement(GroupElement element)
+	public virtual void RemoveElement(GroupElement element, bool resetData = true)
 	{
-		idArray.Remove(idArray.First(arr => arr.id == element.getId));
-		elements.Remove(element);
+		removableElementTemp = element;
+
+		if(resetData == false)
+        {
+			Debug.Log("Remove");
+            if (saveData.idArray.Where(arr => arr.id == element.getId).Count() > 0)
+            {
+                saveData.idArray.Remove(saveData.idArray.First(arr => arr.id == element.getId));
+            }
+            removableElementTemp = null;
+            elements.Remove(element);
+
+            element.DeleteElement(element);
+
+        }
+		else
+		{
+			confirmAction += ConfirmDeleteElemet;
+
+            ManagerUI.instance.ConfirmWindow("Delete this parameter?", this);
+		}
 	}
 	
-	public void DeleteGroup(bool resetData)
+	public void RequestDeleteGroup(bool resetData, bool confirmRequest = false)
 	{
-		if(resetData) ResetData();
-		SaveManager.instance.RemoveSaveableObject(this);
-		groupKeeper.RemoveGroup(this);
-		
-		
-		for(int i = 0; i < elements.Count; i++)
+		if (confirmRequest)
 		{
-			elements[i].DeleteElement(resetData);
+            confirmAction += ConfirmDeleteGroup;
+
+            ManagerUI.instance.ConfirmWindow("Delete this group?", this);
+        }
+		else
+		{
+			DeleteGroup(resetData);
 		}
-		
-		
-		if(groupUI != null) Destroy(groupUI.gameObject);
-		
-		Destroy(gameObject);
 	}
+
+	private void DeleteGroup(bool resetData)
+	{
+
+        SaveManager.instance.RemoveSaveableObject(this);
+        groupKeeper.RemoveGroup(this, resetData);
+
+
+        for (int i = 0; i < elements.Count; i++)
+        {
+            elements[i].DeleteElement(resetData);
+        }
+
+
+        if (groupUI != null) Destroy(groupUI.gameObject);
+
+        Destroy(gameObject);
+    }
+
+	private void ConfirmDeleteGroup()
+	{
+		DeleteGroup(true);
+        ResetData();
+    }
 	
 	public GroupUI prefab => groupPrefab;
 	public GroupUI objectUI => groupUI;
@@ -111,20 +168,65 @@ public class Group : MonoBehaviour, ISaveable
 
    public virtual void SaveData()
 	{
-		string saveStr = JsonUtility.ToJson(this);
-		Debug.Log(saveStr + " - " + SaveManager.instance.startFolder + path + "Group" + id);
+		string saveStr = JsonUtility.ToJson(saveData);
+
+		Debug.Log(saveStr);
+
 		SaveManager.instance.SetString(SaveManager.instance.startFolder + path, "Group" + id, saveStr);
 		
 	}
 	
 	public virtual void LoadData()
 	{
+		Debug.Log(SaveManager.instance.startFolder + path + "Group" + id);
+
 		if(SaveManager.HasKey(SaveManager.instance.startFolder + path, "Group" + id))
 		{
 			string loadStr = SaveManager.GetString(SaveManager.instance.startFolder + path, "Group" + id);
-			
-			JsonUtility.FromJsonOverwrite(loadStr, this);
+            Debug.Log(loadStr);
+
+            saveData = JsonUtility.FromJson<SaveGroupData>(loadStr);
 			elements.Clear();
 		}
 	}
+
+    public void Confirm()
+    {
+		confirmAction?.Invoke();
+		confirmAction = null;
+    }
+
+    public void Cancel()
+    {
+        
+    }
+
+	private void ConfirmDeleteElemet()
+	{
+        if (saveData.idArray.Where(arr => arr.id == removableElementTemp.getId).Count() > 0)
+        {
+            saveData.idArray.Remove(saveData.idArray.First(arr => arr.id == removableElementTemp.getId));
+        }
+        elements.Remove(removableElementTemp);
+        removableElementTemp.DeleteElement(removableElementTemp);
+
+        removableElementTemp = null;
+        SaveData();
+    }
+
+	private void ConfirmSetName()
+	{
+		SetName(nameTemp);
+    }
 }
+
+[Serializable]
+public struct SaveGroupData
+{
+	public string name;
+	public List<idElements> idArray;
+	public bool canEditGroup;
+    public int countElements;
+}
+
+
